@@ -41,3 +41,24 @@ The project follows a clean architecture with MVVM (Model-View-ViewModel) patter
 ## Contributing
 Contributions are welcome! Please fork the repository and create a pull request with your changes. Ensure that your code adheres to the project's coding standards and passes all tests.
 
+## Prerequisites
+- Android Studio Bumblebee | 2021.1.1 or later
+- A Firebase project set up with Firestore and Authentication enabled
+## Installation
+### 1.Clone the repository:
+### 2.Open the project in Android Studio:
+
+- Open Android Studio.
+- Click on File > Open... and select the cloned project directory.
+### 3.Configure Firebase:
+
+- Go to the Firebase Console.
+- Create a new project or select an existing project.
+- Add an Android app to your Firebase project with your app's package name.
+- Download the google-services.json file and place it in the app/ directory of your Android project.
+- In the Firebase console, enable Firestore and Firebase Authentication.
+### 4.Build the project:
+
+- Sync the project with Gradle files by clicking on Sync Project with Gradle Files.
+- Build and run the project on an emulator or a physical device.
+

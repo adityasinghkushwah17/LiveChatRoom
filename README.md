@@ -4,10 +4,10 @@
 Live Chat Room is an Android application built with Kotlin and Jetpack Compose. It provides a real-time chat experience with features like live chat, fast signup and login using Firebase email authentication, status updates, and a profile page for users to view their profiles. The project uses Dagger Hilt for dependency injection and KSP for fast processing.
 
 ## Features
-Live Chat: Real-time chat functionality for users to communicate instantly.
-Fast Signup and Login: Quick and secure authentication using Firebase email authentication.
-User Status: Users can upload and view status updates.
-Profile Page: A profile page where users can view and edit their personal information.
+> Live Chat: Real-time chat functionality for users to communicate instantly.
+> Fast Signup and Login: Quick and secure authentication using Firebase email authentication.
+> User Status: Users can upload and view status updates.
+> Profile Page: A profile page where users can view and edit their personal information.
 ## Technologies Used
 Kotlin: The programming language used for Android development.
 Jetpack Compose: Android's modern toolkit for building native UI.

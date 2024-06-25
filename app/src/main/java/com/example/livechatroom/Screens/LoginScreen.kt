@@ -80,7 +80,17 @@ fun LoginScreen( navController: NavController,vm: LCviewModel){
 
             Text(text = "New User? Go to Sign Up",
                 fontSize = 16.sp,color= Color.Blue,modifier = Modifier.clickable
-                { NavigateTo(navController, DestinationScreen.Signup.route) }) }
+                { NavigateTo(navController, DestinationScreen.Signup.route) })
+
+            Text(text = "Forgot Password?",
+                fontSize = 16.sp,color= Color.Blue,modifier = Modifier.clickable
+                { NavigateTo(navController, DestinationScreen.ForgotPassword.route) }.padding(top = 8.dp))
+
+        }
+
+
+
+
 
 
 

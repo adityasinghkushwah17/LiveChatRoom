@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.livechatroom.Data.CHATS
 import com.example.livechatroom.Data.ChatData
 import com.example.livechatroom.Data.ChatUser
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
@@ -197,7 +199,6 @@ class LCviewModel @Inject constructor(
     }
 
 
-
     fun CreateorUpdateProfile(
         name: String? = null,
         number: String? = null,
@@ -227,7 +228,6 @@ class LCviewModel @Inject constructor(
                 handleException(exception, message = "Failed to create/update User")
             }
     }
-
 
 
     private fun getUserData(uid: String) {
@@ -376,17 +376,32 @@ class LCviewModel @Inject constructor(
                             Status.value = value.toObjects<Status>()
                             Log.d("LCviewModel", "Fetched statuses: ${Status.value.size}")
                             inprogressStatus.value = false
-                        }else {
+                        } else {
                             Log.d("LCviewModel", "No statuses found")
                             inprogressStatus.value = false
                         }
 
                     }
 
-            }else{
+            } else {
                 inprogressStatus.value = false
             }
         }
+    }
+
+    fun SendPasswordResetEmail(email: String, onComplete: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            auth.sendPasswordResetEmail(email).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                  onComplete(true,"Password Email Sent")
+                }else{
+                    onComplete(false,"Failed to send Password Email")
+                    handleException(task.exception)
+                }
+            }
+        }
+
+
     }
 }
 

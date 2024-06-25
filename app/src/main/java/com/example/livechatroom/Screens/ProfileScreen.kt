@@ -98,10 +98,11 @@ fun ProfileContent(
     onNameChange: (String) -> Unit,
     onNumberChange: (String) -> Unit,
     onLogOut: () -> Unit,
+
     onBack: () -> Unit,
     onSave: () -> Unit
 ) {
-    val imageURL = vm.userData.value?.imageURL
+    val PimageURL = vm.userData.value?.imageURL
     Column {
         Row(
             modifier = Modifier
@@ -142,7 +143,7 @@ fun ProfileContent(
             }
         }
             CommonDivider()
-            ProfileImage(imageURL = imageURL, vm = vm)
+            ProfileImage(imageURL = PimageURL, vm = vm)
             CommonDivider()
             Row(
                 modifier = Modifier
@@ -199,13 +200,13 @@ fun ProfileContent(
     }
 
 
+
 @Composable
 fun ProfileImage(imageURL: String?, vm: LCviewModel) {
     val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent())
-        { uri ->
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
-                vm.UploadProfileImage(uri)
+                vm.UploadProfileImage(it)
             }
         }
 
@@ -224,14 +225,12 @@ fun ProfileImage(imageURL: String?, vm: LCviewModel) {
                     .size(100.dp)
             ) {
                 CommonImage(data = imageURL)
-
             }
             Text(text = "Change Profile Picture")
         }
         if (vm.inprogres.value) {
             CommonProgressBar()
         }
-
     }
 }
 

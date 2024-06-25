@@ -38,11 +38,9 @@ import com.example.livechatroom.LCviewModel
 import com.example.livechatroom.NavigateTo
 import com.example.livechatroom.TitleText
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatListScreen(navController: NavController, vm: LCviewModel) {
-
     val inProgress = vm.inprogresChats.value
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -51,9 +49,7 @@ fun ChatListScreen(navController: NavController, vm: LCviewModel) {
         } else {
             val chats = vm.Chats.value
             val userdata = vm.userData.value
-            val showDialog = remember {
-                mutableStateOf(false)
-            }
+            val showDialog = remember { mutableStateOf(false) }
             val onFabClick: () -> Unit = { showDialog.value = true }
             val onDismiss: () -> Unit = { showDialog.value = false }
             val onAddChat: (String) -> Unit = {
@@ -65,11 +61,11 @@ fun ChatListScreen(navController: NavController, vm: LCviewModel) {
                     showDialog = showDialog.value,
                     onFabClick = { onFabClick.invoke() },
                     onDismiss = { onDismiss.invoke() }, onAddChat = { onAddChat.invoke(it) })
-            }, content = { it ->
+            }, content = { paddingValues ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(it)
+                        .padding(paddingValues)
                 ) {
                     TitleText(text = "Chats")
                     if (chats.isEmpty()) {
@@ -82,7 +78,6 @@ fun ChatListScreen(navController: NavController, vm: LCviewModel) {
                         ) {
                             Text(text = "No Chats Available")
                         }
-
                     } else {
                         LazyColumn(modifier = Modifier.weight(1f)) {
                             items(chats) { chat ->
@@ -91,32 +86,25 @@ fun ChatListScreen(navController: NavController, vm: LCviewModel) {
                                 } else {
                                     chat.user1
                                 }
-                                CommonRow(imageurl = chatuser.imageURL, name = chatuser.name) {
+                                // Debug logging
+                                println("Chat User: ${chatuser.name}, Image URL: ${chatuser.imageURL}")
+                                CommonRow(imageurl = vm.userData.value?.imageURL, name = chatuser.name) {
                                     chat.chatID?.let {
-                                        NavigateTo(navController,DestinationScreen.SingleChat.createRoute(it))
+                                        NavigateTo(navController, DestinationScreen.SingleChat.createRoute(it))
                                     }
-
                                 }
-
-
                             }
-
-
                         }
                     }
                 }
-
             }, bottomBar = {
                 BottomNavigationMenu(
                     BottomNavigationMenu.CHATLIST, navController, modifier = Modifier
                 )
             })
-
-
         }
     }
 }
-
 
 @Composable
 fun FAB(
@@ -124,11 +112,8 @@ fun FAB(
     onFabClick: () -> Unit,
     onDismiss: () -> Unit,
     onAddChat: (String) -> Unit,
-
-    ) {
-    val AddchatNumber = remember {
-        mutableStateOf("")
-    }
+) {
+    val AddchatNumber = remember { mutableStateOf("") }
     if (showDialog) {
         AlertDialog(onDismissRequest = {
             onDismiss.invoke()
@@ -146,9 +131,7 @@ fun FAB(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     label = { Text(text = "Enter the phone number") }
                 )
-
             }
-
         )
     }
     FloatingActionButton(
@@ -157,8 +140,5 @@ fun FAB(
         modifier = Modifier.padding(30.dp)
     ) {
         Icon(imageVector = Icons.Rounded.Add, contentDescription = null, tint = Color.White)
-
     }
-
 }
-

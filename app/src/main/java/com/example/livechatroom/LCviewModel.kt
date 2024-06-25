@@ -157,27 +157,25 @@ class LCviewModel @Inject constructor(
     }
 
     fun UploadProfileImage(uri: Uri) {
-        uploadImage(uri, onSuccess = {})
-        CreateorUpdateProfile(imageURL = uri.toString())
+        uploadImage(uri) { uri ->
+            CreateorUpdateProfile(imageURL = uri.toString())
+        }
     }
 
-    fun uploadImage(uri: Uri, onSuccess: (Uri) -> Unit) {
+    fun uploadImage(uri: Uri, onSuccess: (String) -> Unit) {
         inprogres.value = true
         val storageRef = storage.reference
         val uuid = UUID.randomUUID()
-        val Imageref =
-            storageRef.child("images/$uuid") //it will create a node in images folder with uuid
+        val Imageref = storageRef.child("images/$uuid")
         val uploadtask = Imageref.putFile(uri)
         uploadtask.addOnSuccessListener {
-            val result = it.metadata?.reference?.downloadUrl
-            result?.addOnSuccessListener(onSuccess)
-            inprogres.value = false
-
-        }
-            .addOnFailureListener {
-                handleException(it)
+            Imageref.downloadUrl.addOnSuccessListener { downloadUri ->
+                onSuccess(downloadUri.toString())
+                inprogres.value = false
             }
-
+        }.addOnFailureListener {
+            handleException(it)
+        }
     }
 
     fun Login(Email: String, Password: String) {
@@ -197,6 +195,7 @@ class LCviewModel @Inject constructor(
         }
 
     }
+
 
 
     fun CreateorUpdateProfile(
@@ -230,34 +229,30 @@ class LCviewModel @Inject constructor(
     }
 
 
+
     private fun getUserData(uid: String) {
         inprogres.value = true
         db.collection(USER_NODE).document(uid).addSnapshotListener { value, error ->
             if (error != null) {
                 handleException(error, "Failed to retrieve User")
-
             }
             if (value != null) {
-                var user = value.toObject<UserData>()
-                userData.value = user
+                userData.value = value.toObject<UserData>()
                 inprogres.value = false
                 PopulateChats()
                 populateStatuses()
-
             }
-
-
         }
     }
 
-    fun handleException(exception: Exception? = null, message: String = "") {
-
+    private fun handleException(exception: Exception? = null, message: String = "") {
         Log.e("Live Chat Room", message)
         exception?.printStackTrace()
         val errormsg = exception?.localizedMessage
         val message = if (message.isNullOrEmpty()) errormsg else message
         eventmutablestate.value = Events(message)
         inprogres.value = false
+        inprogressStatus.value = false
     }
 
     fun logout() {
@@ -348,6 +343,7 @@ class LCviewModel @Inject constructor(
         val cutofftime = System.currentTimeMillis() - timeDelta
 
         inprogressStatus.value = true
+        Log.d("LCviewModel", "Populating statuses for user: ${userData.value?.userID}")
         db.collection(CHATS).where(
             Filter.or(
                 Filter.equalTo("user1.userID", userData.value?.userID),
@@ -368,19 +364,27 @@ class LCviewModel @Inject constructor(
                         currentConnections.add(it.user1.userID)
                     }
                 }
+                Log.d("LCviewModel", "Current connections: $currentConnections")
                 db.collection(STATUS).whereGreaterThan("timeStamp", cutofftime)
                     .whereIn("user.userID", currentConnections)
                     .addSnapshotListener { value, error ->
                         if (error != null) {
                             handleException(error)
+                            return@addSnapshotListener
                         }
                         if (value != null) {
-                            Status.value = value.toObjects()
+                            Status.value = value.toObjects<Status>()
+                            Log.d("LCviewModel", "Fetched statuses: ${Status.value.size}")
+                            inprogressStatus.value = false
+                        }else {
+                            Log.d("LCviewModel", "No statuses found")
                             inprogressStatus.value = false
                         }
 
                     }
 
+            }else{
+                inprogressStatus.value = false
             }
         }
     }

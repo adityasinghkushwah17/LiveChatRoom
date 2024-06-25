@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,10 +90,7 @@ fun CommonImage(
         modifier = modifier,
         contentScale = contentScale
     )
-
-
 }
-
 @Composable
 fun TitleText(text: String) {
     Text(
@@ -120,6 +118,6 @@ fun CommonRow(imageurl: String?, name: String?, onitemClick: () -> Unit) {
                 .clip(CircleShape)
                 .background(Color.Red)
         )
-        Text(text = name?: "---", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 4.dp))
+        Text(text = name ?: "---", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 4.dp))
     }
 }

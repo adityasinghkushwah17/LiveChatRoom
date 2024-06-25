@@ -14,6 +14,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +29,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -41,60 +45,110 @@ import com.example.livechatroom.checkSignin
 @Composable
 fun SignupScreen(navController: NavController, vm: LCviewModel) {
 
-    checkSignin(vm,navController)
+    checkSignin(vm, navController)
 
     val Name = remember { mutableStateOf(TextFieldValue()) }
-   val Number = remember { mutableStateOf(TextFieldValue()) }
-   val Email = remember { mutableStateOf(TextFieldValue()) }
-   val Password = remember { mutableStateOf(TextFieldValue()) }
+    val Number = remember { mutableStateOf(TextFieldValue()) }
+    val Email = remember { mutableStateOf(TextFieldValue()) }
+    val Password = remember { mutableStateOf(TextFieldValue()) }
+    val passwordVisibility = remember { mutableStateOf(false) }
+    val icon =
+        if (passwordVisibility.value) painterResource(id = R.drawable.baseline_visibility_24) else painterResource(
+            id = R.drawable.baseline_visibility_off_24
+        )
 
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.White)){
-        Column(modifier = Modifier
+    Box(
+        modifier = Modifier
             .fillMaxSize()
-            .wrapContentHeight()
-            .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally) {
-                   Image(painter = painterResource(id = R.drawable.basic_ui__727_),
-                       contentDescription =null, modifier = Modifier
-                           .width(200.dp)
-                           .padding(top = 16.dp)
-                           .padding(8.dp),
-                       contentScale = ContentScale.Fit)
+            .background(Color.White)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentHeight()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.basic_ui__727_),
+                contentDescription = null, modifier = Modifier
+                    .width(200.dp)
+                    .padding(top = 16.dp)
+                    .padding(8.dp),
+                contentScale = ContentScale.Fit
+            )
 
-                   Text(text = "Sign Up", modifier = Modifier.padding(8.dp), fontSize = 24.sp,
-                       fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold)
+            Text(
+                text = "Sign Up", modifier = Modifier.padding(8.dp), fontSize = 24.sp,
+                fontFamily = FontFamily.Serif, fontWeight = FontWeight.Bold
+            )
 
-                   OutlinedTextField(value = Name.value , onValueChange = {Name.value=it},label= { Text(text = "Name")},
-                       modifier = Modifier.padding(8.dp),keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-                   )
-                   OutlinedTextField(value = Number.value , onValueChange = { Number.value=it},label= { Text(text = "Number")},
-                       modifier = Modifier.padding(8.dp),keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
-                   OutlinedTextField(value = Email.value , onValueChange = { Email.value=it},label= { Text(text = "Email")},
-                       modifier = Modifier.padding(8.dp),keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email))
-                   OutlinedTextField(value = Password.value , onValueChange = { Password.value=it},label= { Text(text = "Password")},
-                       modifier = Modifier.padding(8.dp),keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password))
+            OutlinedTextField(
+                value = Name.value,
+                onValueChange = { Name.value = it },
+                label = { Text(text = "Name") },
+                placeholder = { Text(text = "Name") },
+                modifier = Modifier.padding(8.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+            )
+            OutlinedTextField(
+                value = Number.value,
+                onValueChange = { Number.value = it },
+                label = { Text(text = "Number") },
+                placeholder = { Text(text = "Number") },
+                modifier = Modifier.padding(8.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            OutlinedTextField(
+                value = Email.value,
+                onValueChange = { Email.value = it },
+                label = { Text(text = "Email") },
+                placeholder = { Text(text = "Email") },
+                modifier = Modifier.padding(8.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            )
+            OutlinedTextField(
+                value = Password.value,
+                onValueChange = { Password.value = it },
+                label = { Text(text = "Password") },
+                placeholder = { Text(text = "Password") },
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
+                        Icon(
+                            painter = icon,
+                            contentDescription = "Visibilty Icon"
+                        )
+
+                    }
+                },
+                visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+                modifier = Modifier.padding(8.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            )
 
 
-                   Button(onClick = { vm.Signup(Name.value.text,Number.value.text,
-                       Email.value.text,Password.value.text) }
-                       ,modifier = Modifier.padding(8.dp),
-                       colors= ButtonDefaults.buttonColors(Color.Blue)){
-                       Text(text = "Sign Up")
+            Button(
+                onClick = {
+                    vm.Signup(
+                        Name.value.text, Number.value.text,
+                        Email.value.text, Password.value.text
+                    )
+                }, modifier = Modifier.padding(8.dp),
+                colors = ButtonDefaults.buttonColors(Color.Blue)
+            ) {
+                Text(text = "Sign Up")
 
-                   }
+            }
 
-                   Text(text = "Already have an account? Login",
-                       fontSize = 16.sp,color= Color.Blue,modifier = Modifier.clickable
-                       { NavigateTo(navController, DestinationScreen.Login.route) }) }
-
-
-
-
+            Text(text = "Already have an account? Login",
+                fontSize = 16.sp, color = Color.Blue, modifier = Modifier.clickable
+                { NavigateTo(navController, DestinationScreen.Login.route) })
         }
-    if(vm.inprogres.value){
+
+
+    }
+    if (vm.inprogres.value) {
         CommonProgressBar()
     }
-    }
+}

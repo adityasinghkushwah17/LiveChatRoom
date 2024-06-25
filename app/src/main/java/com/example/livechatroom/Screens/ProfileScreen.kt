@@ -55,12 +55,12 @@ fun ProfileScreen(navController: NavController, vm: LCviewModel) {
         if (in_Progress) {
             CommonProgressBar()
         } else {
-            val userdata=vm.userData.value
-            var name by rememberSaveable{
-                mutableStateOf(userdata?.name?:"")
+            val userdata = vm.userData.value
+            var name by rememberSaveable {
+                mutableStateOf(userdata?.name ?: "")
             }
-            var number by rememberSaveable{
-                mutableStateOf(userdata?.number?:"")
+            var number by rememberSaveable {
+                mutableStateOf(userdata?.number ?: "")
             }
             Column(
                 modifier = Modifier
@@ -74,14 +74,16 @@ fun ProfileScreen(navController: NavController, vm: LCviewModel) {
                     vm = vm,
                     Name = name,
                     Number = number,
-                    onNameChange = { name=it },
-                    onNumberChange = { number=it },
-                    onBack = {navController.navigateUp()},
-                    onSave = {vm.CreateorUpdateProfile(name,number)},
-                    onLogOut = {vm.logout()
-                               NavigateTo(navController, DestinationScreen.Login.route)},
-                    
-                )
+                    onNameChange = { name = it },
+                    onNumberChange = { number = it },
+                    onBack = { navController.navigateUp() },
+                    onSave = { vm.CreateorUpdateProfile(name, number) },
+                    onLogOut = {
+                        vm.logout()
+                        NavigateTo(navController, DestinationScreen.Login.route)
+                    },
+
+                    )
             }
             BottomNavigationMenu(
                 selecteditem = BottomNavigationMenu.PROFILE,
@@ -91,6 +93,7 @@ fun ProfileScreen(navController: NavController, vm: LCviewModel) {
         }
     }
 }
+
 @Composable
 fun ProfileContent(
     vm: LCviewModel, Name: String, Number: String,
@@ -142,63 +145,62 @@ fun ProfileContent(
 
             }
         }
-            CommonDivider()
-            ProfileImage(imageURL = PimageURL, vm = vm)
-            CommonDivider()
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Name", modifier = Modifier.width(100.dp))
-                TextField(
-                    value = Name, onValueChange = onNameChange,
-                    colors = TextFieldDefaults.colors(
-                        focusedTextColor = Color.Black,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent
-                    )
+        CommonDivider()
+        ProfileImage(imageURL = PimageURL, vm = vm)
+        CommonDivider()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Name", modifier = Modifier.width(100.dp))
+            TextField(
+                value = Name, onValueChange = onNameChange,
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
                 )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Number", modifier = Modifier.width(100.dp))
-                TextField(
-                    value = Number, onValueChange = onNumberChange,
-                    colors = TextFieldDefaults.colors(
-                        focusedTextColor = Color.Black,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent
-                    )
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Number", modifier = Modifier.width(100.dp))
+            TextField(
+                value = Number, onValueChange = onNumberChange,
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent
                 )
+            )
+        }
+        CommonDivider()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            TextButton(onClick = { onLogOut.invoke() }) {
+                Text(text = "Logout")
+
             }
-            CommonDivider()
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                TextButton(onClick = { onLogOut.invoke() }) {
-                    Text(text = "Logout")
-
-                }
-
-            }
-
 
         }
 
 
     }
 
+
+}
 
 
 @Composable

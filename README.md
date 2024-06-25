@@ -26,8 +26,8 @@ Live Chat Room is an Android application built with Kotlin and Jetpack Compose. 
 - View status updates from your connections.
 ### Profile Page:
 
--View your profile information.
--Edit your profile details as needed.
+- View your profile information.
+- Edit your profile details as needed.
 
 ## Project Structure
 The project follows a clean architecture with MVVM (Model-View-ViewModel) pattern:

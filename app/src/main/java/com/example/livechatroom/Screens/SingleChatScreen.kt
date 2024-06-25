@@ -61,7 +61,7 @@ fun SingleChatScreen(navController: NavController, vm: LCviewModel, chatid: Stri
         vm.depopulatemessages()
     }
     Column {
-        ChatHeader(name = chatuser.name ?: "---", imageUrl = chatuser.imageURL ?: "") {
+        ChatHeader(name = chatuser.name ?: "---", imageUrl = vm.userData.value?.imageURL) {
             navController.navigateUp()
             vm.depopulatemessages()
         }
@@ -114,7 +114,7 @@ fun MessageBox(modifier: Modifier, chatmessages: List<Message>, currentuserid: S
 }
 
 @Composable
-fun ChatHeader(name: String, imageUrl: String, onBackClicked: () -> Unit) {
+fun ChatHeader(name: String, imageUrl: String?, onBackClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

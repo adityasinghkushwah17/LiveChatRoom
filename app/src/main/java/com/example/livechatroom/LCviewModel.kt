@@ -94,10 +94,16 @@ class LCviewModel @Inject constructor(
                     handleException(error)
                 }
                 if (value != null) {
+                    // Add debug logs to inspect the data retrieved from Firestore
+                    Log.d("PopulateChats", "Retrieved chats: ${value.documents}")
+
                     Chats.value = value.documents.mapNotNull {
                         it.toObject<ChatData>()
-
                     }
+
+                    // Add debug logs to verify the data after mapping to ChatData
+                    Log.d("PopulateChats", "Mapped chats: ${Chats.value}")
+
                     inprogresChats.value = false
                 }
             }
@@ -265,8 +271,8 @@ class LCviewModel @Inject constructor(
     }
 
     fun onAddChat(number: String) {
-        if (number.isEmpty() && !number.isDigitsOnly()) {
-            handleException(message = "Number must Contain only digits")
+        if (number.isEmpty() || !number.isDigitsOnly()) {
+            handleException(message = "Number must contain only digits")
         } else {
             db.collection(CHATS).where(
                 Filter.or(
@@ -274,50 +280,50 @@ class LCviewModel @Inject constructor(
                         Filter.equalTo("user1.number", number),
                         Filter.equalTo("user2.number", userData.value?.number)
                     ),
-                    Filter.equalTo("user1.number", userData.value?.number),
-                    Filter.equalTo("user2.number", number)
-
+                    Filter.and(
+                        Filter.equalTo("user1.number", userData.value?.number),
+                        Filter.equalTo("user2.number", number)
+                    )
                 )
             ).get().addOnSuccessListener {
-                if (it.isEmpty()) {
+                if (it.isEmpty) {
                     db.collection(USER_NODE).whereEqualTo("number", number).get()
                         .addOnSuccessListener { it2 ->
-                            if (it2.isEmpty()) {
+                            if (it2.isEmpty) {
                                 handleException(message = "Number Not Found")
-
                             } else {
                                 val chatPartner = it2.toObjects<UserData>()[0]
                                 val id = db.collection(CHATS).document().id
-                                val Chat = ChatData(
+                                val chat = ChatData(
                                     chatID = id,
-                                    ChatUser(
+                                    user1 = ChatUser(
                                         userData.value?.userID,
                                         userData.value?.name,
                                         userData.value?.imageURL,
                                         userData.value?.number
                                     ),
-                                    ChatUser(
+                                    user2 = ChatUser(
                                         chatPartner.userID,
                                         chatPartner.name,
                                         chatPartner.imageURL,
                                         chatPartner.number
                                     )
-
                                 )
-                                db.collection(CHATS).document(id).set(Chat)
+                                db.collection(CHATS).document(id).set(chat)
                             }
-
                         }
                         .addOnFailureListener {
                             handleException(it)
                         }
-
                 } else {
                     handleException(message = "Chat Already exists")
                 }
+            }.addOnFailureListener {
+                handleException(it)
             }
         }
     }
+
 
     fun uploadStatus(uri: Uri) {
         uploadImage(uri) {

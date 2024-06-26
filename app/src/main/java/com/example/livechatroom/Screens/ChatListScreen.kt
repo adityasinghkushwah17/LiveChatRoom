@@ -1,6 +1,7 @@
 package com.example.livechatroom.Screens
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -87,7 +88,7 @@ fun ChatListScreen(navController: NavController, vm: LCviewModel) {
                                     chat.user1
                                 }
                                 // Debug logging
-                                println("Chat User: ${chatuser.name}, Image URL: ${chatuser.imageURL}")
+                                Log.d("Image URL:" ,"${chatuser.imageURL}")
                                 CommonRow(imageurl = vm.userData.value?.imageURL, name = chatuser.name) {
                                     chat.chatID?.let {
                                         NavigateTo(navController, DestinationScreen.SingleChat.createRoute(it))

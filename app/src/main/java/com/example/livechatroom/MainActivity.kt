@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.livechatroom.Screens.ChatListScreen
+import com.example.livechatroom.Screens.First_page
 import com.example.livechatroom.Screens.ForgotPasswordScreen
 import com.example.livechatroom.Screens.LoginScreen
 import com.example.livechatroom.Screens.ProfileScreen
@@ -38,6 +39,7 @@ sealed class DestinationScreen(var route: String){
         fun createRoute(status_Id: String) = "single_status_screen/$status_Id"
     }
     object ForgotPassword : DestinationScreen("forgot_password_screen")
+    object FirstPage : DestinationScreen("first_page_screen")
 
 
 }
@@ -63,7 +65,7 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val vm=hiltViewModel<LCviewModel>()
         NavHost(navController = navController,
-            startDestination =DestinationScreen.Signup.route )
+            startDestination =DestinationScreen.FirstPage.route )
         {
             composable(DestinationScreen.Signup.route){
                 SignupScreen(navController,vm)
@@ -97,6 +99,9 @@ class MainActivity : ComponentActivity() {
             }
             composable(DestinationScreen.ForgotPassword.route){
                ForgotPasswordScreen(navController,vm)
+            }
+            composable(DestinationScreen.FirstPage.route){
+                First_page(navController,vm)
             }
 
 

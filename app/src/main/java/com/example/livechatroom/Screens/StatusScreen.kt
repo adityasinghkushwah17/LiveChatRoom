@@ -1,5 +1,6 @@
 package com.example.livechatroom.Screens
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -29,36 +30,38 @@ import com.example.livechatroom.DestinationScreen
 import com.example.livechatroom.LCviewModel
 import com.example.livechatroom.NavigateTo
 import com.example.livechatroom.TitleText
-
 @Composable
 fun StatusScreen(navController: NavController, vm: LCviewModel) {
+    val inProcess = vm.inprogressStatus.value
 
-    val inprocess = vm.inprogressStatus.value
-    if (inprocess) {
+    if (inProcess) {
         CommonProgressBar()
     } else {
-        val statuses = vm.Status.value
-        val userdata = vm.userData.value
-        val mystatus = statuses.filter {
-            it.user.userID == userdata?.userID
-        }
-        val otherstatus = statuses.filter {
-            it.user.userID != userdata?.userID
-        }
+        val statuses = vm.Status.value ?: emptyList()
+        val userData = vm.userData.value
+
+        // Debug logs for filtered statuses
+        Log.d("My statuses:", "$statuses")
+        Log.d("User data:", "$userData")
+
+        val myStatus = statuses.filter { it.user.userID == userData?.userID }
+        val otherStatus = statuses.filter { it.user.userID != userData?.userID }
+
+        // Debug logs for filtered statuses
+        Log.d("My statuses:", "$myStatus")
+        Log.d("Other statuses:", "$otherStatus")
+
         val launcher =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
-          uri ->
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
                 uri?.let {
                     vm.uploadStatus(uri)
                 }
-
             }
 
         Scaffold(
             floatingActionButton = {
                 FABs {
                     launcher.launch("image/*")
-
                 }
             },
             bottomBar = {
@@ -67,13 +70,15 @@ fun StatusScreen(navController: NavController, vm: LCviewModel) {
                     navController,
                     modifier = Modifier
                 )
-            }, content = {
+            },
+            content = {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(it)
                 ) {
                     TitleText(text = "Status")
+
                     if (statuses.isEmpty()) {
                         Column(
                             modifier = Modifier
@@ -85,41 +90,36 @@ fun StatusScreen(navController: NavController, vm: LCviewModel) {
                             Text(text = "No Status Available")
                         }
                     } else {
-                        if (mystatus.isNotEmpty()) {
+                        if (myStatus.isNotEmpty()) {
                             CommonRow(
-                                imageurl = mystatus[0].user.imageURL,
-                                name = mystatus[0].user.name
+                                imageurl = myStatus[0].user.imageURL,
+                                name = myStatus[0].user.name
                             ) {
                                 NavigateTo(
                                     navController,
-                                    DestinationScreen.SingleStatus.createRoute(mystatus[0].user.userID!!)
+                                    DestinationScreen.SingleStatus.createRoute(myStatus[0].user.userID!!)
                                 )
                             }
                             CommonDivider()
-                            val uniqueuser = otherstatus.map { it.user }.toSet().toList()
-                            LazyColumn(modifier = Modifier.weight(1f)) {
-                                items(uniqueuser) { user ->
-                                    CommonRow(imageurl = user.imageURL, name = user.name) {
-                                        NavigateTo(
-                                            navController,
-                                            DestinationScreen.SingleStatus.createRoute(user.userID!!)
-                                        )
-                                    }
-                                }
-
-                            }
                         }
 
+                        val uniqueUsers = otherStatus.map { it.user }.toSet().toList()
+                        LazyColumn(modifier = Modifier.weight(1f)) {
+                            items(uniqueUsers) { user ->
+                                CommonRow(imageurl = user.imageURL, name = user.name) {
+                                    NavigateTo(
+                                        navController,
+                                        DestinationScreen.SingleStatus.createRoute(user.userID!!)
+                                    )
+                                }
+                            }
+                        }
                     }
-
                 }
-            })
-
+            }
+        )
     }
-
-
 }
-
 
 @Composable
 fun FABs(onFabClick: () -> Unit) {

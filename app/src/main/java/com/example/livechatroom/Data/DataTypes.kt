@@ -19,12 +19,7 @@ data class ChatData(
     val user2: ChatUser = ChatUser(),
 )
 
-//data class ChatUser(
-//    val userID: String? = "",
-//    val name: String? = "",
-//    val imageURL: String? = "",
-//    val number: String? = ""
-//)
+
 
 
 data class Message(
@@ -32,10 +27,7 @@ data class Message(
     val message: String? = "",
     val timeStamp: String?=""
 )
-//data class Status(val user:ChatUser=ChatUser(),
-//    val imageURL: String?,
-//    val timeStamp:Long?
-//    )
+
 
 data class Status(
     val user: ChatUser = ChatUser(),

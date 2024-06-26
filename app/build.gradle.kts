@@ -88,6 +88,19 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation(kotlin("script-runtime"))
 
+
+    implementation (libs.ui)
+    implementation(libs.ui.tooling)
+    implementation ("androidx.compose.foundation:foundation:1.4.3")
+
+    implementation (libs.androidx.xmaterial)
+    implementation(libs.androidx.xmaterial.icons.core)
+    implementation (libs.androidx.xmaterial.icons.extended)
+    implementation (libs.androidx.xactivity.compose)
+    implementation( libs.androidx.xconstraintlayout.compose)
+    implementation( libs.androidx.xnavigation.compose)
+    implementation (libs.ui.tooling.preview)
 
 }

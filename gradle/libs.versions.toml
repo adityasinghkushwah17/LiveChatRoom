@@ -13,10 +13,27 @@ googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.0.0"
 firebaseFirestore = "25.0.0"
 firebaseStorage = "21.0.0"
+ui = "1.6.8"
+uiTooling = " 1.4.3"
+uiToolingPreview = "1.6.8"
+xactivityCompose = "1.7.2"
+xconstraintlayoutCompose = "1.0.1"
+xfoundation = "1.4.3"
+xmaterial = "1.4.3"
+xmaterialIconsCore = " 1.4.3"
+xmaterialIconsExtended = "1.4.3"
+xnavigationCompose = "2.4.0"
 
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-xactivity-compose = { module = "androidx.activity: activity-compose", version.ref = "xactivityCompose" }
+androidx-xconstraintlayout-compose = { module = "androidx.constraintlayout: constraintlayout-compose", version.ref = "xconstraintlayoutCompose" }
+androidx-xfoundation = { module = "androidx.compose. foundation: foundation", version.ref = "xfoundation" }
+androidx-xmaterial = { module = "androidx.compose.material: material", version.ref = "xmaterial" }
+androidx-xmaterial-icons-core = { module = "androidx.compose.material: material-icons-core", version.ref = "xmaterialIconsCore" }
+androidx-xmaterial-icons-extended = { module = "androidx.compose.material: material-icons-extended", version.ref = "xmaterialIconsExtended" }
+androidx-xnavigation-compose = { module = "androidx.navigation: navigation-compose", version.ref = "xnavigationCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -34,6 +51,9 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
+ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
+ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
+ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

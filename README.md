@@ -2,6 +2,20 @@
 
 
 Live Chat Room is an Android application built with Kotlin and Jetpack Compose. It provides a real-time chat experience with features like live chat, fast signup and login using Firebase email authentication, status updates, and a profile page for users to view their profiles. The project uses Dagger Hilt for dependency injection and KSP for fast processing.
+## Screenshots
+<p float="left">
+ <img src="https://github.com/adityasinghkushwah17/LiveChatRoom/assets/130901654/5eaa7b92-ddd8-48e2-97d5-b4ac28d2cb73" width="24%" />
+<img src="https://github.com/adityasinghkushwah17/LiveChatRoom/assets/130901654/713e9fa6-2f31-4d75-971f-c12db90f3d7d" width="24%" />
+<img src="https://github.com/adityasinghkushwah17/LiveChatRoom/assets/130901654/e331bc9c-4b00-4633-b83a-abe31aeb2aa7" width="24%" />
+<img src="https://github.com/adityasinghkushwah17/LiveChatRoom/assets/130901654/b8a09d37-54d1-413c-ac6a-e334b9ea2b34" width="24%" />
+</p>
+
+<p float="left">
+ <img src="https://github.com/adityasinghkushwah17/WishList_App/assets/130901654/f450a154-776e-4c44-8612-0d2a95b39db5" width="24%" />
+<img src="https://github.com/adityasinghkushwah17/WishList_App/assets/130901654/8aac37f9-b952-4a72-99d1-2f659651178c" width="24%" />
+<img src="https://github.com/adityasinghkushwah17/WishList_App/assets/130901654/3333b035-4a9e-4eb9-97e9-b45b12525579" width="24%" />
+<img src="https://github.com/adityasinghkushwah17/WishList_App/assets/130901654/c37871a2-9dd7-42d4-b44a-1c70f61042ff" width="24%" />
+</p>
 
 ## Features
 - Live Chat: Real-time chat functionality for users to communicate instantly.

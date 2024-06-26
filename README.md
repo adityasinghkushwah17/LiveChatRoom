@@ -53,7 +53,7 @@ The project follows a clean architecture with MVVM (Model-View-ViewModel) patter
 - Model: Data classes representing the app's data model.
 
 ## Contributing
-Contributions are welcome! Please fork the repository and create a pull request with your changes. Ensure that your code adheres to the project's coding standards and passes all tests.
+Contributions are welcome! Please fork the repository and create a pull request with your changes. it will be very helpful as still there are some small bugs in this project.
 
 ## Prerequisites
 - Android Studio Bumblebee | 2021.1.1 or later

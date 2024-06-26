@@ -7,7 +7,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,10 +20,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,65 +55,83 @@ fun SingleChatScreen(navController: NavController, vm: LCviewModel, chatid: Stri
     var reply by rememberSaveable { mutableStateOf("") }
 
     val myuser = vm.userData.value
-    val curentChat = vm.Chats.value.first { it.chatID == chatid } // we will get current chat from this
+    val currentChat = vm.Chats.value.first { it.chatID == chatid }
+    val chatuser = if (myuser?.userID == currentChat.user1.userID) currentChat.user2 else currentChat.user1
+    val chatmessages = vm.ChatMessages.value
 
-    val chatuser = (if (myuser?.userID == curentChat.user1.userID) curentChat.user2 else curentChat.user1)
-    val chatmessages=vm.ChatMessages.value
-    Log.d("CHECKING OWN","own :${myuser?.userID ?: ""}")
-    Log.d("CHECKING Other","oth :${chatuser}")
-  //  Log.d("CCCCC","${vm.onSendReply(chatid, reply)}")
     LaunchedEffect(key1 = Unit) {
         vm.populateMessages(chatid)
     }
+
     BackHandler {
         vm.depopulatemessages()
+        navController.navigateUp()
     }
-    Column {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         ChatHeader(name = chatuser.name ?: "---", imageUrl = vm.userData.value?.imageURL) {
-            navController.navigateUp()
             vm.depopulatemessages()
+            navController.navigateUp()
         }
         MessageBox(
             modifier = Modifier.weight(1f),
             chatmessages = chatmessages,
             currentuserid = myuser?.userID ?: ""
-
         )
-        ReplyBox(reply = reply, onReplyChange = { reply = it }, onSendReply = {
-            vm.onSendReply(chatid, reply)
-            reply = ""
-        })
+        ReplyBox(
+            reply = reply,
+            onReplyChange = { reply = it },
+            onSendReply = {
+                vm.onSendReply(chatid, reply)
+                reply = ""
+            }
+        )
     }
 }
 
 @Composable
 fun MessageBox(modifier: Modifier, chatmessages: List<Message>, currentuserid: String) {
-    LazyColumn(modifier = modifier.fillMaxWidth()) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
+    ) {
         items(chatmessages) { msg ->
             val isCurrentUser = msg.sendby == currentuserid
-            Log.d("MessageBox", "Message: ${msg.message}, sendby: ${msg.sendby}, IsCurrentUser: $isCurrentUser")
             val alignment = if (isCurrentUser) Alignment.End else Alignment.Start
             val messageColor = if (isCurrentUser)
-                colorResource(id = R.color.light_green)
+                Color(android.graphics.Color.parseColor("#E88910"))
             else
-                colorResource(id = R.color.grey_light)
+                Color.Gray
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp, horizontal = 8.dp),
+                    .padding(vertical = 4.dp),
                 horizontalAlignment = alignment
             ) {
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(
+                            RoundedCornerShape(
+                                topStart = 16.dp,
+                                topEnd = 16.dp,
+                                bottomStart = if (isCurrentUser) 16.dp else 0.dp,
+                                bottomEnd = if (isCurrentUser) 0.dp else 16.dp
+                            )
+                        )
                         .background(messageColor)
                         .padding(12.dp)
                 ) {
                     Text(
                         text = msg.message ?: "",
-                        color = colorResource(id = R.color.white),
-                        fontWeight = FontWeight.Normal
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
@@ -118,27 +144,28 @@ fun ChatHeader(name: String, imageUrl: String?, onBackClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
-            contentDescription = null,
-            modifier = Modifier
-                .clickable { onBackClicked.invoke() }
-                .padding(8.dp)
-        )
+        IconButton(onClick = onBackClicked) {
+            Icon(
+                Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
+                contentDescription = "Back",
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+        }
         CommonImage(
             data = imageUrl,
             modifier = Modifier
-                .padding(8.dp)
-                .size(50.dp)
+                .size(40.dp)
                 .clip(CircleShape)
         )
         Text(
             text = name,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 8.dp)
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(start = 12.dp)
         )
     }
 }
@@ -146,22 +173,39 @@ fun ChatHeader(name: String, imageUrl: String?, onBackClicked: () -> Unit) {
 @Composable
 fun ReplyBox(reply: String, onReplyChange: (String) -> Unit, onSendReply: () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        CommonDivider()
+        Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
                 value = reply,
-                onValueChange = { onReplyChange(it) },
+                onValueChange = onReplyChange,
                 maxLines = 3,
-                modifier = Modifier.weight(3f)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                placeholder = { Text("Type a message...") },
+                shape = RoundedCornerShape(24.dp)
             )
-            Button(onClick = { onSendReply() }, modifier = Modifier.weight(1f)) {
-                Text(text = "Send")
-               // Log.d("CCCCC","${onSendReply}")
+            Button(
+                onClick = onSendReply,
+                shape = CircleShape,
+                contentPadding = PaddingValues(12.dp)
+            ) {
+                Icon(
+                    Icons.Default.Send,
+                    contentDescription = "Send",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
             }
         }
     }

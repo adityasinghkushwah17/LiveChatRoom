@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.livechatroom.CommonDivider
@@ -125,9 +126,9 @@ fun StatusScreen(navController: NavController, vm: LCviewModel) {
 fun FABs(onFabClick: () -> Unit) {
     FloatingActionButton(
         onClick = { onFabClick.invoke() },
-        containerColor = MaterialTheme.colorScheme.secondary,
+        containerColor = Color(android.graphics.Color.parseColor("#E88910")),
         modifier = Modifier.padding(30.dp)
     ) {
-        Icon(imageVector = Icons.Rounded.Edit, contentDescription = "Add status")
+        Icon(imageVector = Icons.Rounded.Edit, contentDescription = "Add status", tint = Color.White)
     }
 }

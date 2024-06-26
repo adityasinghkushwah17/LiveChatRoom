@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -80,10 +83,13 @@ fun CommonDivider() {
 @Composable
 fun CommonImage(
     data: String?,
-    modifier: Modifier = Modifier.wrapContentSize(),
+    modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop
 ) {
-    val painter = rememberAsyncImagePainter(model = data)
+    val painter = rememberAsyncImagePainter(
+        model = data,
+        error = painterResource(id = R.drawable.profile)
+    )
     Image(
         painter = painter,
         contentDescription = null,
@@ -107,17 +113,43 @@ fun CommonRow(imageurl: String?, name: String?, onitemClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(75.dp)
-            .clickable { onitemClick.invoke() }, verticalAlignment = Alignment.CenterVertically
+            .height(80.dp)
+            .clickable { onitemClick.invoke() }
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         CommonImage(
             data = imageurl,
             Modifier
-                .padding(8.dp)
-                .size(50.dp)
+                .size(56.dp)
                 .clip(CircleShape)
-                .background(Color.Red)
+                .background(Color(0xFFE0E0E0))
         )
-        Text(text = name ?: "---", fontWeight = FontWeight.Bold, modifier = Modifier.padding(start = 4.dp))
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 16.dp)
+        ) {
+            Text(
+                text = name ?: "---",
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 16.sp,
+                color = Color(0xFF212121)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Last message",
+                fontSize = 14.sp,
+                color = Color(0xFF757575),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Text(
+            text = "12:30 PM",
+            fontSize = 12.sp,
+            color = Color(0xFF9E9E9E),
+            modifier = Modifier.padding(start = 8.dp)
+        )
     }
 }

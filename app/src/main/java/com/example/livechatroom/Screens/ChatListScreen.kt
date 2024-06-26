@@ -1,16 +1,15 @@
 package com.example.livechatroom.Screens
 
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -57,53 +56,74 @@ fun ChatListScreen(navController: NavController, vm: LCviewModel) {
                 vm.onAddChat(it)
                 showDialog.value = false
             }
-            Scaffold(floatingActionButton = {
-                FAB(
-                    showDialog = showDialog.value,
-                    onFabClick = { onFabClick.invoke() },
-                    onDismiss = { onDismiss.invoke() }, onAddChat = { onAddChat.invoke(it) })
-            }, content = { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                ) {
-                    TitleText(text = "Chats")
-                    if (chats.isEmpty()) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(text = "No Chats Available")
-                        }
-                    } else {
-                        LazyColumn(modifier = Modifier.weight(1f)) {
-                            items(chats) { chat ->
-                                val chatuser = if (chat.user1.userID == userdata?.userID) {
-                                    chat.user2
-                                } else {
-                                    chat.user1
-                                }
-                                // Debug logging
-                                Log.d("Image URL:" ,"${chatuser.imageURL}")
-                                CommonRow(imageurl = vm.userData.value?.imageURL, name = chatuser.name) {
-                                    chat.chatID?.let {
-                                        NavigateTo(navController, DestinationScreen.SingleChat.createRoute(it))
+
+            Scaffold(
+                floatingActionButton = {
+                    FAB(
+                        showDialog = showDialog.value,
+                        onFabClick = onFabClick,
+                        onDismiss = onDismiss,
+                        onAddChat = onAddChat
+                    )
+                },
+                content = { paddingValues ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                    ) {
+                        TitleText(
+                            text = "Chats",
+
+                        )
+                        if (chats.isEmpty()) {
+                            EmptyChatListPlaceholder()
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier.weight(1f),
+                                contentPadding = PaddingValues(vertical = 8.dp)
+                            ) {
+                                items(chats) { chat ->
+                                    val chatuser = if (chat.user1.userID == userdata?.userID) chat.user2 else chat.user1
+                                    CommonRow(
+                                        imageurl = chatuser.imageURL,
+                                        name = chatuser.name
+                                    ) {
+                                        chat.chatID?.let {
+                                            NavigateTo(navController, DestinationScreen.SingleChat.createRoute(it))
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-            }, bottomBar = {
-                BottomNavigationMenu(
-                    BottomNavigationMenu.CHATLIST, navController, modifier = Modifier
-                )
-            })
+                },
+                bottomBar = {
+                    BottomNavigationMenu(
+                        BottomNavigationMenu.CHATLIST,
+                        navController,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }, containerColor =Color(android.graphics.Color.parseColor("#f8eeec"))
+            )
         }
+    }
+}
+
+@Composable
+fun EmptyChatListPlaceholder() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "No Chats Available",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+        )
     }
 }
 
@@ -114,32 +134,42 @@ fun FAB(
     onDismiss: () -> Unit,
     onAddChat: (String) -> Unit,
 ) {
-    val AddchatNumber = remember { mutableStateOf("") }
+    val addChatNumber = remember { mutableStateOf("") }
+
     if (showDialog) {
-        AlertDialog(onDismissRequest = {
-            onDismiss.invoke()
-            AddchatNumber.value = ""
-        },
-            confirmButton = {
-                Button(onClick = { onAddChat(AddchatNumber.value) })
-                { Text(text = "Add") }
+        AlertDialog(
+            onDismissRequest = {
+                onDismiss()
+                addChatNumber.value = ""
             },
-            title = { Text(text = "Add Chat") },
+            confirmButton = {
+                Button(onClick = { onAddChat(addChatNumber.value) }) {
+                    Text(text = "Add")
+                }
+            },
+            title = { Text(text = "Add Chat", style = MaterialTheme.typography.titleLarge) },
             text = {
                 OutlinedTextField(
-                    value = AddchatNumber.value,
-                    onValueChange = { AddchatNumber.value = it },
+                    value = addChatNumber.value,
+                    onValueChange = { addChatNumber.value = it },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    label = { Text(text = "Enter the phone number") }
+                    label = { Text(text = "Enter the phone number") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         )
     }
+
     FloatingActionButton(
-        onClick = { onFabClick.invoke() },
-        containerColor = MaterialTheme.colorScheme.secondary,
-        modifier = Modifier.padding(30.dp)
+        onClick = onFabClick,
+        containerColor = Color(android.graphics.Color.parseColor("#E88910")),
+        modifier = Modifier.padding(16.dp)
     ) {
-        Icon(imageVector = Icons.Rounded.Add, contentDescription = null, tint = Color.White)
+        Icon(
+            imageVector = Icons.Rounded.Add,
+            contentDescription = "Add Chat",
+            tint = Color.White
+        )
     }
 }

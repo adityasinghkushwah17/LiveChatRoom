@@ -11,7 +11,7 @@ Live Chat Room is an Android application built with Kotlin and Jetpack Compose. 
 </p>
 
 <p float="left">
- <img src="https://github.com/adityasinghkushwah17/LiveChatRoom/assets/130901654/8ee9f29b-697a-42d5-9da0-3d7a2468b350" width="24%" />
+ <img src="https://github.com/adityasinghkushwah17/LiveChatRoom/assets/130901654/97f0cf15-8f1f-4f36-8cc1-e72e9cbd29ad" width="24%" />
 <img src="https://github.com/adityasinghkushwah17/LiveChatRoom/assets/130901654/c97010b0-1550-4ca5-980e-165c45f430b3" width="24%" />
 <img src="https://github.com/adityasinghkushwah17/LiveChatRoom/assets/130901654/1bae7161-8de9-4559-aae0-8943f69efda3" width="24%" />
 <img src="https://github.com/adityasinghkushwah17/LiveChatRoom/assets/130901654/65d3767f-b30c-4a97-b803-70fe6ceb6106" width="24%" />

@@ -22,7 +22,7 @@ Live Chat Room is an Android application built with Kotlin and Jetpack Compose. 
 - Fast Signup and Login: Quick and secure authentication using Firebase email authentication.
 - User Status: Users can upload and view status updates.
 - Profile Page: A profile page where users can view and edit their personal information.
-## Technologies Used
+## Tech Stack
 - Kotlin: The programming language used for Android development.
 - Jetpack Compose: Android's modern toolkit for building native UI.
 - Firebase: Backend services including Firestore for database and Firebase Authentication for user authentication.
